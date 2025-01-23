@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Users List</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+    <h2 class="mb-4">User List</h2>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Name</th>
+            <th>Last Name</th>
+            <th>Age</th>
+            <th>Select</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.id}">1</td>
+            <td th:text="${user.username}">jdoe</td>
+            <td th:text="${user.name}">John</td>
+            <td th:text="${user.last_name}">Doe</td>
+            <td th:text="${user.age}">30</td>
+            <td>
+                <input type="radio" name="selectedUser" th:value="${user.id}" th:id="'user' + ${user.id}"
+                       th:onclick="'selectUser(' + ${user.id} + ')'">
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div style="position: relative">
+        <button class="btn btn-primary" onclick="location.href='users/user-form'">Create User</button>
+        <button class="btn btn-light" id="updateButton" disabled onclick="updateUser()">Edit User</button>
+        <button style="position: absolute; right: 0" class="btn btn-danger fixed-right" id="deleteButton" disabled onclick="deleteUser()">Delete User</button>
+    </div>
+</div>
+
+<script>
+    let selectedUserId = null;
+
+    function selectUser(userId) {
+        selectedUserId = userId;
+        document.getElementById('deleteButton').disabled = false;
+        document.getElementById('updateButton').disabled = false;
+    }
+
+    function deleteUser() {
+        if (selectedUserId) {
+            if (confirm('Are you sure you want to delete this user?')) {
+                location.href = '/users/deleteUser?userId=' + selectedUserId;
+            }
+        }
+    }
+
+    function updateUser() {
+        if (selectedUserId) {
+            location.href = '/users/user-form?userId=' + selectedUserId;
+        }
+    }
+</script>
+</body>
+</html>
